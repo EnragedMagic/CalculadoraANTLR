@@ -1,17 +1,21 @@
+// Importa Swing, que usamos para crear la ventana grafica
 import javax.swing.*;
+// Importa herramientas graficas, graphics y graphics 2d
 import java.awt.*;
+// Este importa list para almacenar valores en x y y
 import java.util.List;
-
+// Aqui esta el componente de swing sobre el que se dibuja 
 public class PlotWindow extends JPanel {
-
+    // Lista de valores del eje x
     private List<Double> xs;
-
+    // Valores de la primera funcion
     private List<Double> ys;
+    // Valores de la segunda funcion, por si se grafican dos funciones
     private List<Double> ys2;
-
+    // Esto limita verticales opcionales, por ejemplo cuando se especifica min y max
     private Double fixedYmin;
     private Double fixedYmax;
-
+    // Ese constructor es para una grafica normal, que guarda los valores recibidos
     public PlotWindow(
             List<Double> xs,
             List<Double> ys) {
@@ -21,7 +25,7 @@ public class PlotWindow extends JPanel {
 
         createWindow();
     }
-
+    // Este constructor es para una grafica con limites verticales
     public PlotWindow(
             List<Double> xs,
             List<Double> ys,
@@ -36,7 +40,7 @@ public class PlotWindow extends JPanel {
 
         createWindow();
     }
-
+    // Este es para graficar dos funciones
     public PlotWindow(
             List<Double> xs,
             List<Double> ys,
@@ -48,7 +52,7 @@ public class PlotWindow extends JPanel {
 
         createWindow();
     }
-
+    // Aqui se crea la ventana donde se mostrara la grafica
     private void createWindow() {
 
         JFrame frame =
@@ -61,24 +65,24 @@ public class PlotWindow extends JPanel {
         );
 
         frame.setSize(800, 600);
-
+        // Agrega jpanel a la ventana
         frame.add(this);
-
+        // La hace visible
         frame.setVisible(true);
     }
-
-    @Override
+    // Swing llama a este metodo para volver a dibujar o dibujar el panel
+    @Override // Metodo solo puede usarse dentro de la clase y tambien por clases heredadas
     protected void paintComponent(Graphics g) {
-
+    // Limpiar el panel antes de dibujar
         super.paintComponent(g);
-
+    // Convierte graficos 
         Graphics2D g2 =
                 (Graphics2D) g;
-
+    // Si hay menos de dos puntos no se dibuja una linea
         if (xs.size() < 2) {
             return;
         }
-
+    // Minimos y maximos, se busca el menor valor de x y mayor valor de x
         double xmin =
                 xs.stream()
                         .mapToDouble(Double::doubleValue)
@@ -93,7 +97,7 @@ public class PlotWindow extends JPanel {
 
         double ymin;
         double ymax;
-
+// Si el usuario especifico limites verticales se usan esos valores
         if (fixedYmin != null &&
                 fixedYmax != null) {
 
@@ -101,7 +105,7 @@ public class PlotWindow extends JPanel {
             ymax = fixedYmax;
 
         } else {
-
+// Si no, se calcula automaticamente el menor o mayor Y
             ymin =
                     ys.stream()
                             .mapToDouble(Double::doubleValue)
@@ -115,7 +119,7 @@ public class PlotWindow extends JPanel {
                             .orElse(1);
 
             if (ys2 != null) {
-
+// Esto es para segundas funciones, para tener en cuenta sus valores
                 double ymin2 =
                         ys2.stream()
                                 .mapToDouble(Double::doubleValue)
@@ -132,7 +136,7 @@ public class PlotWindow extends JPanel {
                 ymax = Math.max(ymax, ymax2);
             }
         }
-
+// Se dibuja la primera funcion
         drawFunction(
                 g2,
                 xs,
@@ -142,7 +146,7 @@ public class PlotWindow extends JPanel {
                 ymin,
                 ymax
         );
-
+// Segunda funcion
         if (ys2 != null) {
 
             drawFunction(
@@ -156,7 +160,7 @@ public class PlotWindow extends JPanel {
             );
         }
     }
-
+// Este metodo recibe los puntos y los convierte a posiciones
     private void drawFunction(
             Graphics2D g2,
             List<Double> xValues,
@@ -165,7 +169,7 @@ public class PlotWindow extends JPanel {
             double xmax,
             double ymin,
             double ymax) {
-
+    // Recorre todos los puntos de la funcion 
         for (int i = 1;
              i < xValues.size();
              i++) {
@@ -181,14 +185,14 @@ public class PlotWindow extends JPanel {
 
             double y2 =
                     yValues.get(i);
-
+// Convierte x1 a horizontal en pixeles
             int px1 =
                     (int) (
                             (x1 - xmin)
                             / (xmax - xmin)
                             * getWidth()
                     );
-
+// Lo mismo pero vertical
             int py1 =
                     getHeight()
                     - (int) (
