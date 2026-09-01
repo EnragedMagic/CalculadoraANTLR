@@ -1,0 +1,11 @@
+a=10
+a
+b=5
+b
+a+b
+a*b
+radio=3
+pi*radio^2
+numero_1=50
+numero_1/2
+vars
