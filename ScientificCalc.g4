@@ -15,6 +15,10 @@ stat
         # showVars
     | 'plot' '(' expr ',' expr ',' expr ')' NEWLINE
         # plotExpr
+    | 'plot' '(' expr ',' expr ',' expr ',' expr ',' expr ')' NEWLINE
+        # plotRangeExpr
+    | 'plot' '(' expr ',' expr ',' expr ',' expr ')' NEWLINE
+        # plotMultiExpr
     | NEWLINE
         # blank
     ;
@@ -22,14 +26,16 @@ stat
 expr
     : <assoc=right> expr '^' expr
         # power
+    | op=('+'|'-') expr
+        # unary
     | expr op=('*'|'/') expr
         # mulDiv
     | expr op=('+'|'-') expr
         # addSub
-    | op=('+'|'-') expr
-        # unary
     | function '(' expr ')'
         # functionCall
+    | function2 '(' expr ',' expr ')'
+        # function2Call
     | constant
         # constantExpr
     | NUMBER
@@ -44,11 +50,22 @@ function
     : 'sin'
     | 'cos'
     | 'tan'
+    | 'asin'
+    | 'acos'
+    | 'atan'
     | 'sqrt'
     | 'log'
     | 'ln'
     | 'abs'
     | 'exp'
+    | 'floor'
+    | 'ceil'
+    ;
+
+function2
+    : 'pow'
+    | 'max'
+    | 'min'
     ;
 
 constant
@@ -60,6 +77,7 @@ MUL : '*';
 DIV : '/';
 ADD : '+';
 SUB : '-';
+POW : '^';
 
 NUMBER
     : [0-9]+ ('.' [0-9]+)?
