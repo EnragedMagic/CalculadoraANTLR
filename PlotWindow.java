@@ -5,7 +5,12 @@ import java.util.List;
 public class PlotWindow extends JPanel {
 
     private List<Double> xs;
+
     private List<Double> ys;
+    private List<Double> ys2;
+
+    private Double fixedYmin;
+    private Double fixedYmax;
 
     public PlotWindow(
             List<Double> xs,
@@ -14,8 +19,42 @@ public class PlotWindow extends JPanel {
         this.xs = xs;
         this.ys = ys;
 
+        createWindow();
+    }
+
+    public PlotWindow(
+            List<Double> xs,
+            List<Double> ys,
+            double ymin,
+            double ymax) {
+
+        this.xs = xs;
+        this.ys = ys;
+
+        this.fixedYmin = ymin;
+        this.fixedYmax = ymax;
+
+        createWindow();
+    }
+
+    public PlotWindow(
+            List<Double> xs,
+            List<Double> ys,
+            List<Double> ys2) {
+
+        this.xs = xs;
+        this.ys = ys;
+        this.ys2 = ys2;
+
+        createWindow();
+    }
+
+    private void createWindow() {
+
         JFrame frame =
-                new JFrame("Scientific Calculator");
+                new JFrame(
+                        "Scientific Calculator"
+                );
 
         frame.setDefaultCloseOperation(
                 JFrame.DISPOSE_ON_CLOSE
@@ -52,25 +91,96 @@ public class PlotWindow extends JPanel {
                         .max()
                         .orElse(1);
 
-        double ymin =
-                ys.stream()
-                        .mapToDouble(Double::doubleValue)
-                        .min()
-                        .orElse(-1);
+        double ymin;
+        double ymax;
 
-        double ymax =
-                ys.stream()
-                        .mapToDouble(Double::doubleValue)
-                        .max()
-                        .orElse(1);
+        if (fixedYmin != null &&
+                fixedYmax != null) {
 
-        for (int i = 1; i < xs.size(); i++) {
+            ymin = fixedYmin;
+            ymax = fixedYmax;
 
-            double x1 = xs.get(i - 1);
-            double y1 = ys.get(i - 1);
+        } else {
 
-            double x2 = xs.get(i);
-            double y2 = ys.get(i);
+            ymin =
+                    ys.stream()
+                            .mapToDouble(Double::doubleValue)
+                            .min()
+                            .orElse(-1);
+
+            ymax =
+                    ys.stream()
+                            .mapToDouble(Double::doubleValue)
+                            .max()
+                            .orElse(1);
+
+            if (ys2 != null) {
+
+                double ymin2 =
+                        ys2.stream()
+                                .mapToDouble(Double::doubleValue)
+                                .min()
+                                .orElse(-1);
+
+                double ymax2 =
+                        ys2.stream()
+                                .mapToDouble(Double::doubleValue)
+                                .max()
+                                .orElse(1);
+
+                ymin = Math.min(ymin, ymin2);
+                ymax = Math.max(ymax, ymax2);
+            }
+        }
+
+        drawFunction(
+                g2,
+                xs,
+                ys,
+                xmin,
+                xmax,
+                ymin,
+                ymax
+        );
+
+        if (ys2 != null) {
+
+            drawFunction(
+                    g2,
+                    xs,
+                    ys2,
+                    xmin,
+                    xmax,
+                    ymin,
+                    ymax
+            );
+        }
+    }
+
+    private void drawFunction(
+            Graphics2D g2,
+            List<Double> xValues,
+            List<Double> yValues,
+            double xmin,
+            double xmax,
+            double ymin,
+            double ymax) {
+
+        for (int i = 1;
+             i < xValues.size();
+             i++) {
+
+            double x1 =
+                    xValues.get(i - 1);
+
+            double y1 =
+                    yValues.get(i - 1);
+
+            double x2 =
+                    xValues.get(i);
+
+            double y2 =
+                    yValues.get(i);
 
             int px1 =
                     (int) (
@@ -103,8 +213,10 @@ public class PlotWindow extends JPanel {
                     );
 
             g2.drawLine(
-                    px1, py1,
-                    px2, py2
+                    px1,
+                    py1,
+                    px2,
+                    py2
             );
         }
     }
