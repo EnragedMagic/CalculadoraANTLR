@@ -42,6 +42,10 @@ public class ScientificEvalVisitor
             return left * right;
         }
 
+        if (right == 0) {
+            System.err.println("Error: division por cero.");
+        }
+
         return left / right;
     }
 
@@ -104,6 +108,19 @@ public class ScientificEvalVisitor
     }
 
     @Override
+    public Double visitUnary(
+            ScientificCalcParser.UnaryContext ctx) {
+
+        double value = visit(ctx.expr());
+
+        if (ctx.op.getText().equals("-")) {
+            return -value;
+        }
+
+        return value;
+    }
+
+    @Override
     public Double visitFunctionCall(
             ScientificCalcParser.FunctionCallContext ctx) {
 
@@ -124,6 +141,15 @@ public class ScientificEvalVisitor
             case "tan":
                 return Math.tan(value);
 
+            case "asin":
+                return Math.asin(value);
+
+            case "acos":
+                return Math.acos(value);
+
+            case "atan":
+                return Math.atan(value);
+
             case "sqrt":
                 return Math.sqrt(value);
 
@@ -139,6 +165,12 @@ public class ScientificEvalVisitor
             case "exp":
                 return Math.exp(value);
 
+            case "floor":
+                return Math.floor(value);
+
+            case "ceil":
+                return Math.ceil(value);
+
             default:
                 throw new RuntimeException(
                         "Funcion desconocida: " + function
@@ -147,16 +179,31 @@ public class ScientificEvalVisitor
     }
 
     @Override
-    public Double visitUnary(
-            ScientificCalcParser.UnaryContext ctx) {
+    public Double visitFunction2Call(
+            ScientificCalcParser.Function2CallContext ctx) {
 
-        double value = visit(ctx.expr());
+        String function =
+                ctx.function2().getText();
 
-        if (ctx.op.getText().equals("-")) {
-            return -value;
+        double value1 = visit(ctx.expr(0));
+        double value2 = visit(ctx.expr(1));
+
+        switch (function) {
+
+            case "pow":
+                return Math.pow(value1, value2);
+
+            case "max":
+                return Math.max(value1, value2);
+
+            case "min":
+                return Math.min(value1, value2);
+
+            default:
+                throw new RuntimeException(
+                        "Funcion desconocida: " + function
+                );
         }
-
-        return value;
     }
 
     @Override
@@ -183,7 +230,9 @@ public class ScientificEvalVisitor
 
         memory.clear();
 
-        System.out.println("Memoria eliminada.");
+        System.out.println(
+                "Memoria eliminada."
+        );
 
         return 0.0;
     }
@@ -193,7 +242,11 @@ public class ScientificEvalVisitor
             ScientificCalcParser.ShowVarsContext ctx) {
 
         if (memory.isEmpty()) {
-            System.out.println("No hay variables definidas.");
+
+            System.out.println(
+                    "No hay variables definidas."
+            );
+
             return 0.0;
         }
 
@@ -202,8 +255,8 @@ public class ScientificEvalVisitor
 
             System.out.println(
                     entry.getKey()
-                            + " = "
-                            + entry.getValue()
+                    + " = "
+                    + entry.getValue()
             );
         }
 
@@ -222,6 +275,8 @@ public class ScientificEvalVisitor
         List<Double> xs = new ArrayList<>();
         List<Double> ys = new ArrayList<>();
 
+        Double oldX = memory.get("x");
+
         for (int i = 0; i < samples; i++) {
 
             double x =
@@ -239,8 +294,110 @@ public class ScientificEvalVisitor
             }
         }
 
+        restoreX(oldX);
+
         new PlotWindow(xs, ys);
 
         return 0.0;
+    }
+
+    @Override
+    public Double visitPlotRangeExpr(
+            ScientificCalcParser.PlotRangeExprContext ctx) {
+
+        double xmin = visit(ctx.expr(1));
+        double xmax = visit(ctx.expr(2));
+
+        double ymin = visit(ctx.expr(3));
+        double ymax = visit(ctx.expr(4));
+
+        int samples = 800;
+
+        List<Double> xs = new ArrayList<>();
+        List<Double> ys = new ArrayList<>();
+
+        Double oldX = memory.get("x");
+
+        for (int i = 0; i < samples; i++) {
+
+            double x =
+                    xmin
+                    + i * (xmax - xmin)
+                    / (samples - 1);
+
+            memory.put("x", x);
+
+            double y = visit(ctx.expr(0));
+
+            if (Double.isFinite(y)) {
+                xs.add(x);
+                ys.add(y);
+            }
+        }
+
+        restoreX(oldX);
+
+        new PlotWindow(
+                xs,
+                ys,
+                ymin,
+                ymax
+        );
+
+        return 0.0;
+    }
+
+    @Override
+    public Double visitPlotMultiExpr(
+            ScientificCalcParser.PlotMultiExprContext ctx) {
+
+        double xmin = visit(ctx.expr(2));
+        double xmax = visit(ctx.expr(3));
+
+        int samples = 800;
+
+        List<Double> xs = new ArrayList<>();
+
+        List<Double> ys1 = new ArrayList<>();
+        List<Double> ys2 = new ArrayList<>();
+
+        Double oldX = memory.get("x");
+
+        for (int i = 0; i < samples; i++) {
+
+            double x =
+                    xmin
+                    + i * (xmax - xmin)
+                    / (samples - 1);
+
+            memory.put("x", x);
+
+            double y1 = visit(ctx.expr(0));
+            double y2 = visit(ctx.expr(1));
+
+            xs.add(x);
+
+            ys1.add(y1);
+            ys2.add(y2);
+        }
+
+        restoreX(oldX);
+
+        new PlotWindow(
+                xs,
+                ys1,
+                ys2
+        );
+
+        return 0.0;
+    }
+
+    private void restoreX(Double oldX) {
+
+        if (oldX == null) {
+            memory.remove("x");
+        } else {
+            memory.put("x", oldX);
+        }
     }
 }
