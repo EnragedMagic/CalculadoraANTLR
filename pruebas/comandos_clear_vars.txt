@@ -1,0 +1,9 @@
+vars
+a=10
+b=20
+c=30
+vars
+clear
+vars
+a
+b
