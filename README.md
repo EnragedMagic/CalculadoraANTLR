@@ -501,33 +501,153 @@ ScientificCalcParser.java
 ScientificCalcVisitor.java
 ScientificCalcBaseVisitor.java
 ```
+## Ejecutar pruebas en Ubuntu
 
-Compilar:
+Para ver los archivos disponibles dentro de la carpeta de pruebas:
 
-```powershell
-javac -cp ".;C:\Users\INFINIX\Documents\ANTLR\antlr-4.13.2-complete.jar" *.java
+```bash
+ls ./pruebas
 ```
 
-Ejecutar:
+Para ver el contenido de un archivo:
 
-```powershell
-java -cp ".;C:\Users\INFINIX\Documents\ANTLR\antlr-4.13.2-complete.jar" Main
+```bash
+cat ./pruebas/01_aritmetica_basica.txt
 ```
 
-## Ejecutar pruebas
+Para ejecutar las pruebas de aritmetica basica:
 
-Para ejecutar una prueba:
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/01_aritmetica_basica.txt
+```
 
-```powershell
-Get-Content .\pruebas\aritmetica_basica.txt | java -cp ".;C:\Users\INFINIX\Documents\ANTLR\antlr-4.13.2-complete.jar" Main
+Para ejecutar las pruebas de precedencia y parentesis:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/02_precedencia_parentesis.txt
+```
+
+Para ejecutar las pruebas de variables y memoria:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/03_variables_memoria.txt
+```
+
+Para ejecutar las pruebas de potencias y operadores unarios:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/04_potencias_unarios.txt
+```
+
+Para ejecutar las pruebas de funciones cientificas:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/05_funciones_cientificas.txt
+```
+
+Para ejecutar las pruebas de funciones de dos argumentos:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/06_funciones_dos_argumentos.txt
+```
+
+Para ejecutar las pruebas de constantes:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/07_constantes.txt
+```
+
+Para ejecutar las pruebas de los comandos clear y vars:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/08_comandos_clear_vars.txt
+```
+
+Para ejecutar las pruebas de division por cero:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/09_division_por_cero.txt
+```
+
+Para ejecutar las pruebas de dominios invalidos:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/10_dominios_invalidos.txt
+```
+
+Para ejecutar las pruebas de errores de sintaxis:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/11_errores_sintaxis.txt
+```
+
+Para ejecutar las pruebas de graficacion:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/12_graficacion_plot.txt
+```
+
+Para ejecutar las pruebas de rango en Y:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/13_plot_rango_y.txt
+```
+
+Para ejecutar las pruebas de graficas multiples:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/14_plot_multiple.txt
+```
+
+Para ejecutar las pruebas de los retos extendidos:
+
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/15_retos_extendidos.txt
 ```
 
 Para ejecutar la prueba general:
 
-```powershell
-Get-Content .\pruebas\todas.txt | java -cp ".;C:\Users\INFINIX\Documents\ANTLR\antlr-4.13.2-complete.jar" Main
+```bash
+java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main < ./pruebas/todas.txt
 ```
 
+## Ejecutar operaciones directamente
+
+Ejemplo con suma:
+
+```bash
+echo "2+3" | java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main
+```
+
+Ejemplo con multiplicacion:
+
+```bash
+echo "10*5" | java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main
+```
+
+Ejemplo con una funcion:
+
+```bash
+echo "sqrt(25)" | java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main
+```
+
+Ejemplo con una variable:
+
+```bash
+printf "a=10\na+5\n" | java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main
+```
+
+Ejemplo para graficar:
+
+```bash
+echo "plot(x^2,-10,10)" | java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main
+```
+
+La forma general es:
+
+```bash
+echo "OPERACION" | java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main
+```
 ## Conclusion
 
 Este proyecto permitio aplicar de forma practica los conceptos vistos en Lenguajes de Programacion y Traduccion.
