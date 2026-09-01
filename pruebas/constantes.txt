@@ -1,0 +1,9 @@
+pi
+e
+pi*2
+e*2
+pi^2
+e^2
+sin(pi/2)
+cos(pi)
+ln(e)
