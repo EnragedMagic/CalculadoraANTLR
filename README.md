@@ -485,19 +485,13 @@ Para ejecutar el proyecto se necesita:
 - `antlr-4.13.2-complete.jar`
 - PowerShell
 
-## Generacion, compilacion y ejecucion
+## Ejecutar operaciones directamente
 
-Entrar a la carpeta del proyecto:
+Para ejecutar una operación sin usar archivos de prueba:
 
-```powershell
-cd C:\Users\INFINIX\Documents\CalculadoraANTLR
-```
-
+```bash
+echo "2+3" | java -cp ".:$HOME/antlr/antlr-4.13.2-complete.jar" Main
 Generar los archivos de ANTLR:
-
-```powershell
-antlr4 -no-listener -visitor ScientificCalc.g4
-```
 
 Esto genera archivos como:
 
