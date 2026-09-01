@@ -525,7 +525,7 @@ java -cp ".;C:\Users\INFINIX\Documents\ANTLR\antlr-4.13.2-complete.jar" Main
 Para ejecutar una prueba:
 
 ```powershell
-Get-Content .\pruebas\01_aritmetica.txt | java -cp ".;C:\Users\INFINIX\Documents\ANTLR\antlr-4.13.2-complete.jar" Main
+Get-Content .\pruebas\aritmetica_basica.txt | java -cp ".;C:\Users\INFINIX\Documents\ANTLR\antlr-4.13.2-complete.jar" Main
 ```
 
 Para ejecutar la prueba general:
